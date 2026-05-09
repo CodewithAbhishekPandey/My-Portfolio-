@@ -191,42 +191,7 @@ const Hero = () => {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-matte-black via-transparent to-transparent opacity-60" />
             
-            {/* Floating Project Cards */}
-            <motion.div 
-               style={{ y: useTransform(scrollYProgress, [0, 1], [0, -120]) }}
-               animate={{ x: [0, 10, 0] }}
-               transition={{ x: { duration: 4, repeat: Infinity, ease: "easeInOut" } }}
-               className="absolute -right-8 top-1/4 glass p-4 rounded-3xl max-w-[180px] hidden lg:block"
-            >
-              <div className="w-full h-24 bg-matte-black rounded-lg mb-3 overflow-hidden">
-                <img 
-                  src="https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=400&auto=format&fit=crop" 
-                  alt="Project" 
-                  className="w-full h-full object-cover opacity-80"
-                  referrerPolicy="no-referrer"
-                />
-              </div>
-              <span className="text-[10px] uppercase tracking-widest opacity-40 font-bold block mb-1">Branding</span>
-              <p className="text-xs font-bold">VERENA LUXURY</p>
-            </motion.div>
-
-            <motion.div 
-               style={{ y: useTransform(scrollYProgress, [0, 1], [0, -60]) }}
-               animate={{ x: [0, -10, 0] }}
-               transition={{ x: { duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 } }}
-               className="absolute -left-8 bottom-1/4 glass p-4 rounded-3xl max-w-[180px] hidden lg:block"
-            >
-              <div className="w-full h-24 bg-matte-black rounded-lg mb-3 overflow-hidden">
-                <img 
-                   src="https://images.unsplash.com/photo-1551288049-bbda48658a7d?q=80&w=400&auto=format&fit=crop" 
-                   alt="Project" 
-                   className="w-full h-full object-cover opacity-80"
-                   referrerPolicy="no-referrer"
-                />
-              </div>
-              <span className="text-[10px] uppercase tracking-widest opacity-40 font-bold block mb-1">SaaS Interface</span>
-              <p className="text-xs font-bold">INSIGHT ANALYTICS</p>
-            </motion.div>
+            {/* Floating Project Cards removed */}
           </div>
         </motion.div>
       </motion.div>
