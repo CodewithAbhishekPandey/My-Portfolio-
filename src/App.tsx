@@ -404,9 +404,9 @@ const Projects = () => {
       link: "/5.png"
     },
     {
-      title: "Nexora AI",
+      title: "Velorix AI",
       category: "Web Application",
-      desc: "AI-powered SaaS platform replacing Volorix AI.",
+      desc: "Revolutionary AI-powered SaaS platform for business intelligence.",
       img: "/6.png",
       link: "/6.png"
     },
