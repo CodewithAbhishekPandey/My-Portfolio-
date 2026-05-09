@@ -16,6 +16,7 @@ import {
   Palette,
   Quote,
   Star,
+  User,
   Image as ImageIcon,
   PenTool,
   Type,
@@ -491,22 +492,24 @@ const Stats = () => {
 const Testimonials = () => {
   const testimonials = [
     {
-      name: "Sarah Johnson",
-      role: "CEO, Verena Skincare",
-      text: "Abhishek Pandey transformed our brand vision into a stunning identity and delivered a web platform that exceeded our expectations.",
-      img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=200&auto=format&fit=crop"
+      name: "Dr. Pooja Sharma",
+      role: "Dean of UCER",
+      text: "Abhishek Pandey transformed our brand vision into a stunning identity and delivered a web platform that exceeded our expectations."
     },
     {
       name: "Michael Chen",
-      role: "Founder, Nexora",
-      text: "Professional, creative and incredibly talented. Highly recommended for any design or development project.",
-      img: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=200&auto=format&fit=crop"
+      role: "Founder of Velorix",
+      text: "Professional, creative and incredibly talented. Highly recommended for any design or development project."
     },
     {
        name: "Emily Rodriguez",
-       role: "Marketing Director",
-       text: "The attention to detail and problem solving skills are exceptional. A true partner in our growth.",
-       img: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=200&auto=format&fit=crop"
+       role: "Marketing Director of Verena Luxury",
+       text: "The attention to detail and problem solving skills are exceptional. A true partner in our growth."
+    },
+    {
+       name: "Prince Sharma",
+       role: "Founder of XO Furious",
+       text: "The digital experience created for XO Furious captures the essence of our premium grooming line perfectly. Truly exceptional work."
     }
   ];
 
@@ -532,13 +535,8 @@ const Testimonials = () => {
                 <Quote className="absolute top-8 right-8 text-wine-red/20 w-12 h-12" />
                 <p className="text-xl font-light leading-relaxed mb-10 italic">"{t.text}"</p>
                 <div className="flex items-center gap-4">
-                   <div className="w-12 h-12 rounded-full overflow-hidden border border-white/10">
-                      <img 
-                         src={t.img} 
-                         alt={t.name} 
-                         className="w-full h-full object-cover" 
-                         referrerPolicy="no-referrer"
-                      />
+                   <div className="w-12 h-12 rounded-full overflow-hidden border border-white/10 flex items-center justify-center bg-white/5">
+                      <User className="w-6 h-6 text-wine-red" />
                    </div>
                    <div>
                       <p className="font-bold tracking-wide text-sm">{t.name}</p>
