@@ -52,7 +52,7 @@ const ProjectCard = ({ project, index }: { project: any, index: number, key?: Re
             transition={{ duration: 1.5, ease: [0.33, 1, 0.68, 1] }}
             src={project.img} 
             alt={project.title} 
-            className="w-full h-full object-cover grayscale brightness-[0.4] group-hover:grayscale-0 group-hover:brightness-[0.8] transition-all duration-1000"
+            className="w-full h-full object-cover brightness-[0.4] group-hover:brightness-[0.8] transition-all duration-1000"
             referrerPolicy="no-referrer"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-matte-black via-matte-black/60 to-transparent" />
@@ -63,7 +63,10 @@ const ProjectCard = ({ project, index }: { project: any, index: number, key?: Re
         <h3 className="text-4xl font-editorial mb-4 tracking-tighter leading-none">{project.title}</h3>
         <p className="text-sm text-warm-ivory/50 font-light mb-8 line-clamp-2 max-w-[280px]">{project.desc}</p>
         
-        <motion.button 
+        <motion.a 
+          href={project.link || "#"}
+          target="_blank"
+          rel="noopener noreferrer"
           whileHover={{ y: -5, scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           className="flex items-center gap-3 text-[9px] font-bold tracking-[0.4em] uppercase bg-wine-red text-white px-8 py-5 rounded-full w-fit shadow-[0_15px_30px_-10px_rgba(91,0,18,0.6)] group/btn overflow-hidden relative"
@@ -71,7 +74,7 @@ const ProjectCard = ({ project, index }: { project: any, index: number, key?: Re
           <span className="relative z-10">Case Study</span>
           <ArrowUpRight className="w-3.5 h-3.5 relative z-10 group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1 transition-transform" />
           <div className="absolute inset-0 bg-red-800 scale-x-0 group-hover/btn:scale-x-100 transition-transform origin-left duration-500" />
-        </motion.button>
+        </motion.a>
       </div>
     </motion.div>
   );
@@ -100,7 +103,7 @@ const Navbar = () => {
         </div>
         
         <div className="hidden md:flex items-center space-x-10 text-[11px] font-bold tracking-widest uppercase">
-          {['Home', 'About', 'Skills', 'Projects', 'Experience', 'Contact'].map((item) => (
+          {['Home', 'About', 'Skills', 'Projects', 'Testimonials', 'Contact'].map((item) => (
             <a 
               key={item} 
               href={`#${item.toLowerCase()}`}
@@ -111,12 +114,12 @@ const Navbar = () => {
           ))}
         </div>
 
-        <button className="group relative px-6 py-2 border border-white/20 rounded-full overflow-hidden transition-all duration-500 hover:border-wine-red">
+        <a href="#contact" className="group relative px-6 py-2 border border-white/20 rounded-full overflow-hidden transition-all duration-500 hover:border-wine-red">
           <span className="relative z-10 text-[11px] font-bold tracking-widest uppercase flex items-center gap-2">
             Let's Talk <ArrowUpRight className="w-3 h-3 group-hover:rotate-45 transition-transform" />
           </span>
           <div className="absolute inset-0 bg-wine-red translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
-        </button>
+        </a>
       </div>
     </motion.nav>
   );
@@ -163,12 +166,12 @@ const Hero = () => {
           </p>
 
           <div className="flex flex-wrap gap-4">
-            <button className="px-8 py-4 bg-wine-red text-warm-ivory rounded-full text-xs font-bold tracking-[0.2em] uppercase hover:bg-red-800 transition-colors glow-red">
+            <a href="#projects" className="px-8 py-4 bg-wine-red text-warm-ivory rounded-full text-xs font-bold tracking-[0.2em] uppercase hover:bg-red-800 transition-colors glow-red text-center">
               View My Work
-            </button>
-            <button className="px-8 py-4 border border-white/10 rounded-full text-xs font-bold tracking-[0.2em] uppercase hover:bg-white hover:text-matte-black transition-all">
+            </a>
+            <a href="#contact" className="px-8 py-4 border border-white/10 rounded-full text-xs font-bold tracking-[0.2em] uppercase hover:bg-white hover:text-matte-black transition-all text-center">
               Get In Touch
-            </button>
+            </a>
           </div>
         </motion.div>
 
@@ -181,9 +184,9 @@ const Hero = () => {
         >
           <div className="relative aspect-[3/4] rounded-[40px] overflow-hidden border border-white/5 glow-red">
             <img 
-              src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=1976&auto=format&fit=crop" 
+              src="/1.jpg" 
               alt="Cinematic Portrait"
-              className="w-full h-full object-cover grayscale transition-transform duration-1000 group-hover:scale-105"
+              className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
               referrerPolicy="no-referrer"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-matte-black via-transparent to-transparent opacity-60" />
@@ -249,9 +252,9 @@ const About = () => {
         <div className="relative">
           <div className="aspect-square rounded-2xl overflow-hidden border border-white/5 relative z-10">
             <img 
-              src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1964&auto=format&fit=crop" 
+              src="/2.jpg" 
               alt="Profile"
-              className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
+              className="w-full h-full object-cover hover:grayscale-0 transition-all duration-700"
               referrerPolicy="no-referrer"
             />
           </div>
@@ -424,19 +427,20 @@ const Projects = () => {
       title: "Verena Luxury",
       category: "Branding",
       desc: "Luxury skincare brand identity with editorial packaging design.",
-      img: "https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=1200&auto=format&fit=crop"
+      img: "/5.png"
     },
     {
       title: "Nexora AI",
       category: "Web Application",
       desc: "AI-powered SaaS platform for seamless business automation.",
-      img: "https://images.unsplash.com/photo-1639322537228-f710d846310a?q=80&w=1200&auto=format&fit=crop"
+      img: "/6.png"
     },
     {
-      title: "Insight Dashboard",
-      category: "Analytics",
-      desc: "High-performance data visualization for global enterprises.",
-      img: "https://images.unsplash.com/photo-1551288049-bbda48658a7d?q=80&w=1200&auto=format&fit=crop"
+      title: "Pawvetra Luxury Pets Brand",
+      category: "E-commerce & Branding",
+      desc: "High-end luxury pet brand identity and digital experience.",
+      img: "/4.png",
+      link: "https://pawvetra.vercel.app"
     }
   ];
 
