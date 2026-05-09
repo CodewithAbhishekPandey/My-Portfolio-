@@ -424,16 +424,25 @@ const Skills = () => {
 const Projects = () => {
   const projects = [
     {
+      title: "XO Furious",
+      category: "Men's Luxury Grooming",
+      desc: "Premium men's grooming identity and digital experience.",
+      img: "/7.png",
+      link: "https://xofurious.com"
+    },
+    {
       title: "Verena Luxury",
       category: "Branding",
       desc: "Luxury skincare brand identity with editorial packaging design.",
-      img: "/5.png"
+      img: "/5.png",
+      link: "/5.png"
     },
     {
       title: "Nexora AI",
       category: "Web Application",
-      desc: "AI-powered SaaS platform for seamless business automation.",
-      img: "/6.png"
+      desc: "AI-powered SaaS platform replacing Volorix AI.",
+      img: "/6.png",
+      link: "/6.png"
     },
     {
       title: "Pawvetra Luxury Pets Brand",
@@ -460,11 +469,33 @@ const Projects = () => {
           </button>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <motion.div 
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={{
+            hidden: { opacity: 0 },
+            visible: {
+              opacity: 1,
+              transition: {
+                staggerChildren: 0.2
+              }
+            }
+          }}
+          className="grid md:grid-cols-3 gap-8"
+        >
           {projects.map((project, i) => (
-            <ProjectCard key={i} project={project} index={i} />
+            <motion.div
+              key={i}
+              variants={{
+                hidden: { opacity: 0, y: 50 },
+                visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] } }
+              }}
+            >
+              <ProjectCard project={project} index={i} />
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );
