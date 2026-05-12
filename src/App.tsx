@@ -24,7 +24,9 @@ import {
   Monitor,
   Server,
   Layers,
-  Terminal
+  Terminal,
+  Sun,
+  Moon
 } from 'lucide-react';
 
 // --- Components ---
@@ -53,10 +55,10 @@ const ProjectCard = ({ project, index }: { project: any, index: number, key?: Re
             transition={{ duration: 1.5, ease: [0.33, 1, 0.68, 1] }}
             src={project.img} 
             alt={project.title} 
-            className="w-full h-full object-cover brightness-[0.4] group-hover:brightness-[0.8] transition-all duration-1000"
+            className="w-full h-full object-cover brightness-[0.7] group-hover:brightness-[0.9] transition-all duration-1000"
             referrerPolicy="no-referrer"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-matte-black via-matte-black/60 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
       </div>
       
       <div className="relative z-10 p-6 md:p-8">
@@ -81,7 +83,7 @@ const ProjectCard = ({ project, index }: { project: any, index: number, key?: Re
   );
 };
 
-const Navbar = () => {
+const Navbar = ({ isDarkMode, toggleTheme }: { isDarkMode: boolean, toggleTheme: () => void }) => {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -96,14 +98,14 @@ const Navbar = () => {
       animate={{ y: 0 }}
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
         scrolled ? 'py-4 bg-matte-black/80 backdrop-blur-lg border-b border-white/5' : 'py-8 bg-transparent'
-      }`}
+      } ${!isDarkMode && scrolled ? 'bg-[#f4ece1]/80 backdrop-blur-lg border-[#2d241c]/10' : ''}`}
     >
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
         <div className="text-2xl font-editorial font-bold tracking-tighter">
           Abhishek <span className="text-wine-red">Pandey</span>
         </div>
         
-        <div className="hidden md:flex items-center space-x-10 text-[11px] font-bold tracking-widest uppercase">
+        <div className="hidden lg:flex items-center space-x-8 text-[11px] font-bold tracking-widest uppercase">
           {[
             { name: 'Home', id: 'home' },
             { name: 'About', id: 'about' },
@@ -116,19 +118,37 @@ const Navbar = () => {
             <a 
               key={item.name} 
               href={`#${item.id}`}
-              className="hover:text-wine-red transition-colors duration-300"
+              className={`transition-colors duration-300 ${isDarkMode ? 'hover:text-wine-red' : 'hover:text-blood'}`}
             >
               {item.name}
             </a>
           ))}
         </div>
 
-        <a href="#contact" className="group relative px-6 py-2 border border-white/20 rounded-full overflow-hidden transition-all duration-500 hover:border-wine-red">
-          <span className="relative z-10 text-[11px] font-bold tracking-widest uppercase flex items-center gap-2">
-            Let's Talk <ArrowUpRight className="w-3 h-3 group-hover:rotate-45 transition-transform" />
-          </span>
-          <div className="absolute inset-0 bg-wine-red translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
-        </a>
+        <div className="flex items-center space-x-6">
+          {/* Theme Toggle Button */}
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={toggleTheme}
+            className={`w-10 h-10 rounded-full flex items-center justify-center border transition-all duration-300 ${
+              isDarkMode 
+                ? 'border-white/10 bg-white/5 text-warm-ivory' 
+                : 'border-[#2d241c]/10 bg-[#2d241c]/5 text-[#2d241c]'
+            }`}
+          >
+            {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+          </motion.button>
+
+          <a href="#contact" className={`group relative px-6 py-2 border rounded-full overflow-hidden transition-all duration-500 ${
+            isDarkMode ? 'border-white/20 hover:border-wine-red' : 'border-[#2d241c]/20 hover:border-wine-red'
+          }`}>
+            <span className="relative z-10 text-[11px] font-bold tracking-widest uppercase flex items-center gap-2">
+              Let's Talk <ArrowUpRight className="w-3 h-3 group-hover:rotate-45 transition-transform" />
+            </span>
+            <div className="absolute inset-0 bg-wine-red translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
+          </a>
+        </div>
       </div>
     </motion.nav>
   );
@@ -873,16 +893,6 @@ const Contact = () => {
               </motion.a>
             ))}
           </div>
-
-          <div className="mt-20 relative">
-             <div className="w-48 h-48 rounded-full border border-wine-red/20 flex items-center justify-center relative animate-pulse">
-                <div className="text-center">
-                   <p className="text-[10px] font-bold tracking-widest uppercase opacity-40 mb-1">Status</p>
-                   <p className="text-xs font-bold text-green-500 uppercase tracking-widest">Available</p>
-                </div>
-                <div className="absolute -top-1 -left-1 w-3 h-3 bg-green-500 rounded-full glow-red shadow-[0_0_10px_rgba(0,255,0,0.5)]" />
-             </div>
-          </div>
         </div>
 
         <div className="glass p-12 rounded-[40px] relative">
@@ -1006,20 +1016,27 @@ const Footer = () => {
 // --- Main App ---
 
 export default function App() {
+  const [isDarkMode, setIsDarkMode] = useState(true);
   const { scrollYProgress } = useScroll();
   const scaleX = useTransform(scrollYProgress, [0, 1], [0, 1]);
 
+  const toggleTheme = () => setIsDarkMode(!isDarkMode);
+
   return (
-    <div className="min-h-screen bg-matte-black selection:bg-wine-red selection:text-warm-ivory">
+    <div className={`min-h-screen transition-colors duration-700 ${
+      isDarkMode 
+        ? 'bg-matte-black text-warm-ivory selection:bg-wine-red selection:text-warm-ivory' 
+        : 'bg-[#f4ece1] text-[#2d241c] selection:bg-blood selection:text-white'
+    }`}>
       {/* Progress Bar */}
       <motion.div 
         className="fixed top-0 left-0 right-0 h-1 bg-wine-red z-[100] origin-left"
         style={{ scaleX }}
       />
 
-      <Navbar />
+      <Navbar isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
       
-      <main>
+      <main className={isDarkMode ? '' : 'light-theme'}>
         <Hero />
         <About />
         <Skills />
@@ -1036,19 +1053,26 @@ export default function App() {
       <motion.div 
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 2, duration: 1 }}
-        className="fixed bottom-10 right-10 z-[100] group"
+        transition={{ delay: 1, duration: 0.8 }}
+        className="fixed bottom-8 right-8 z-[100]"
       >
-        <div className="relative w-24 h-24 flex items-center justify-center">
-          <motion.div 
-            animate={{ rotate: 360 }}
-            transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-            className="absolute inset-0 border border-wine-red/30 rounded-full border-dashed"
-          />
-          <div className="glass w-20 h-20 rounded-full flex flex-col items-center justify-center text-center p-2 glow-red group-hover:scale-110 transition-transform duration-500 bg-matte-black/40">
-             <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse mb-1 shadow-[0_0_8px_rgba(34,197,94,0.6)]" />
-             <span className="text-[8px] font-bold tracking-[0.2em] leading-tight uppercase opacity-60">I'm Available</span>
-             <span className="text-[8px] font-bold tracking-[0.2em] leading-tight uppercase text-wine-red">For Projects</span>
+        <div className={`flex flex-col items-center justify-center w-24 h-24 rounded-full border shadow-2xl transition-all duration-500 group cursor-default text-center p-2 ${
+          isDarkMode 
+            ? 'bg-matte-black/40 border-white/10 backdrop-blur-md' 
+            : 'bg-white/40 border-[#2d241c]/10 backdrop-blur-md'
+        }`}>
+          <div className="relative flex items-center justify-center mb-1">
+            <div className={`absolute w-16 h-16 rounded-full border border-dashed animate-spin-slow ${
+              isDarkMode ? 'border-wine-red/40' : 'border-wine-red/20'
+            }`} />
+            <div className="w-2 h-2 bg-green-500 rounded-full shadow-[0_0_8px_rgba(34,197,94,0.8)] animate-pulse" />
+          </div>
+          <div className="flex flex-col items-center">
+            <span className={`text-[7px] font-black tracking-[0.2em] uppercase opacity-50 mb-0.5 ${
+              isDarkMode ? 'text-warm-ivory' : 'text-[#2d241c]'
+            }`}>Status</span>
+            <span className="text-[8px] font-black tracking-[0.1em] uppercase text-wine-red leading-none">Open To</span>
+            <span className="text-[8px] font-black tracking-[0.1em] uppercase text-wine-red leading-none mt-0.5">Work</span>
           </div>
         </div>
       </motion.div>

@@ -10,11 +10,133 @@
   --color-crimson: #dc143c;
   --color-charcoal: #121212;
   
+  /* Light Theme Colors (Brown Beige) */
+  --bg-light: #f4ece1;
+  --text-light: #2d241c;
+  --muted-light: #8b735b;
+  --border-light: rgba(60, 42, 33, 0.15);
+  
   --font-editorial: "Playfair Display", serif;
   --font-modern: "Inter", sans-serif;
   --font-bebas: "Bebas Neue", sans-serif;
   --font-rajdhani: "Rajdhani", sans-serif;
   --font-mono: "Space Mono", monospace;
+}
+
+/* Light Theme Overrides */
+.light-theme {
+  --matte-black: var(--bg-light);
+  --warm-ivory: var(--text-light);
+}
+
+.light-theme section {
+  background-color: var(--bg-light) !important;
+  color: var(--text-light) !important;
+}
+
+.light-theme .glass {
+  background: rgba(60, 42, 33, 0.05);
+  border-color: rgba(60, 42, 33, 0.1);
+  backdrop-filter: blur(12px);
+}
+
+.light-theme .text-warm-ivory\/50 {
+  color: rgba(60, 42, 33, 0.6) !important;
+}
+
+.light-theme .text-warm-ivory\/60 {
+  color: rgba(60, 42, 33, 0.7) !important;
+}
+
+.light-theme .text-warm-ivory\/40 {
+  color: rgba(60, 42, 33, 0.5) !important;
+}
+
+.light-theme .opacity-40 {
+  opacity: 0.7 !important;
+}
+
+.light-theme .border-white\/5,
+.light-theme .border-white\/10 {
+  border-color: rgba(60, 42, 33, 0.15) !important;
+}
+
+.light-theme .bg-white\/5 {
+  background-color: rgba(60, 42, 33, 0.05) !important;
+}
+
+.light-theme #graphic-design {
+  background-color: #efeadf !important;
+}
+
+.light-theme .card-overlay {
+  background: linear-gradient(to top, rgba(139, 0, 0, 0.95) 0%, rgba(244, 236, 225, 0.1) 60%, transparent 100%) !important;
+}
+
+.light-theme .bg-charcoal,
+.light-theme .bg-matte-black,
+.light-theme .bg-\[\#0a0a0a\],
+.light-theme .bg-\[\#080808\],
+.light-theme .bg-\[\#111\] {
+  background-color: var(--bg-light) !important;
+}
+
+.light-theme h1, 
+.light-theme h2, 
+.light-theme h3, 
+.light-theme p, 
+.light-theme span:not(.text-wine-red):not(.overlay-tag) {
+  color: var(--text-light) !important;
+}
+
+.light-theme .text-wine-red {
+  color: #8B0000 !important; /* Darker red for light mode contrast */
+}
+
+/* Specific component fixes for light mode */
+.light-theme .ambient-glow-gd {
+  background: radial-gradient(circle, rgba(139, 0, 0, 0.15) 0%, transparent 70%);
+}
+
+.light-theme .eyebrow-line-gd {
+  background: #8B0000;
+}
+
+.light-theme .progress-bar-wrap {
+  background: rgba(139, 0, 0, 0.1);
+}
+
+.light-theme .dot {
+  background: rgba(60, 42, 33, 0.2);
+}
+
+.light-theme .dot-active {
+  background: #8B0000;
+}
+
+.light-theme .strip-label {
+  color: rgba(60, 42, 33, 0.5);
+}
+
+.light-theme footer {
+  background-color: #efeadf !important;
+  border-top-color: rgba(60, 42, 33, 0.1);
+}
+
+.light-theme footer p, 
+.light-theme footer div {
+  color: var(--text-light) !important;
+}
+
+@layer utilities {
+  .animate-spin-slow {
+    animation: spin-slow 8s linear infinite;
+  }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 /* ════════════════════════════
@@ -181,10 +303,11 @@
 
 .slide-card .card-img {
   width:100%; height:100%; object-fit:cover; display:block;
-  transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1), filter 0.6s ease;
   will-change: transform;
+  filter: brightness(0.9);
 }
-.slide-card:hover .card-img { transform: scale(1.12); }
+.slide-card:hover .card-img { transform: scale(1.12); filter: brightness(1.05); }
 
 /* GLITCH SCANLINES */
 .slide-card-active::before {
