@@ -482,6 +482,8 @@ const GraphicDesign = () => {
   const [exitDir, setExitDir] = useState<string | null>(null);
   const [enterDir, setEnterDir] = useState<string | null>(null);
   
+  const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 0);
+  
   const trackRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const ambientGlowRef = useRef<HTMLDivElement>(null);
@@ -551,47 +553,24 @@ const GraphicDesign = () => {
     ambientGlowRef.current.style.top = `${glowY}px`;
   };
 
-  const setTrackX = (x: number) => {
-    if (trackRef.current) {
-      trackRef.current.style.transform = `translateX(${x}px)`;
-    }
-  };
-
-  const animateTrack = (from: number, to: number, dur: number) => {
-    const start = performance.now();
-    const step = (now: number) => {
-      const t = Math.min((now - start) / dur, 1);
-      const ease = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-      setTrackX(from + (to - from) * ease);
-      if (t < 1) requestAnimationFrame(step);
-      else setTrackX(to);
-    };
-    requestAnimationFrame(step);
-  };
-
   const goTo = (idx: number, dir?: number) => {
     if (busy || idx === current) return;
     setBusy(true);
 
     const direction = dir !== undefined ? dir : (idx > current ? 1 : -1);
-    const prev = current;
     const nextIdx = ((idx % total) + total) % total;
 
     // Trigger Wiping Flash
     setIsWiping(false);
     setTimeout(() => setIsWiping(true), 10);
 
-    // Trigger card exit animations
+    // Trigger card entrance animations
     setExitDir(direction > 0 ? 'exit-left' : 'exit-right');
     setEnterDir(direction > 0 ? 'enter-from-right' : 'enter-from-left');
 
-    const cw = getCardWidth();
-    const fromX = -(prev * (cw + GAP));
-    const toX = -(nextIdx * (cw + GAP));
-    animateTrack(fromX, toX, 480);
+    setCurrent(nextIdx);
 
     setTimeout(() => {
-      setCurrent(nextIdx);
       setExitDir(null);
       setEnterDir(null);
       updateGlow(nextIdx);
@@ -603,8 +582,11 @@ const GraphicDesign = () => {
   useEffect(() => {
     updateGlow(current);
     const handleResize = () => {
-      setTrackX(-(current * (getCardWidth() + GAP)));
-      updateGlow(current);
+      setWindowWidth(window.innerWidth);
+      // Small delay to ensure measurements are accurate after layout shift
+      setTimeout(() => {
+        updateGlow(current);
+      }, 100);
     };
     window.addEventListener('resize', handleResize);
 
@@ -647,7 +629,24 @@ const GraphicDesign = () => {
       </div>
 
       {/* SLIDER */}
-      <div className="slider-outer">
+      <div className="slider-outer group/slider">
+        {/* navigation buttons moved to sides */}
+        <button 
+          className="ctrl-btn side-btn btn-left" 
+          onClick={() => goTo(current === 0 ? total - 1 : current - 1, -1)} 
+          aria-label="Previous"
+        >
+          <ChevronRight className="w-6 h-6 rotate-180" />
+        </button>
+
+        <button 
+          className="ctrl-btn side-btn btn-right" 
+          onClick={() => goTo(current === total - 1 ? 0 : current + 1, 1)} 
+          aria-label="Next"
+        >
+          <ChevronRight className="w-6 h-6" />
+        </button>
+
         {/* wipe flash overlay */}
         <div className={`wipe-flash ${isWiping ? 'wipe-flash-playing' : ''}`} id="wipeFlash"></div>
 
@@ -674,23 +673,17 @@ const GraphicDesign = () => {
             window.addEventListener('touchend', onTouchEnd);
           }}
         >
-          <div ref={trackRef} className="slider-track" id="sliderTrack">
+          <motion.div 
+            ref={trackRef} 
+            className="slider-track" 
+            id="sliderTrack"
+            animate={{ x: -(current * (getCardWidth() + GAP)) }}
+            transition={{ type: "spring", stiffness: 100, damping: 20, mass: 1 }}
+          >
             {graphicProjects.map((project, i) => (
               <div 
                 key={i} 
-                className={`slide-card c${i + 1} ${current === i ? 'slide-card-active' : ''} ${
-                  current === i && enterDir ? enterDir : ''
-                } ${
-                  exitDir && ( (i === (current - 1 + total) % total && exitDir) || (i === (current + 1) % total && exitDir) ) ? '' : ''
-                  /* The CSS animation logic for exit/enter is a bit tricky with React's state. 
-                     I'll just let the state update handle position and use simpler approach.
-                  */
-                }`}
-                style={{ 
-                  animationName: current === i && enterDir ? (enterDir === 'enter-from-right' ? 'enterFromRight' : 'enterFromLeft') : undefined,
-                  animationDuration: '0.55s',
-                  animationFillMode: 'forwards'
-                }}
+                className={`slide-card c${i + 1} ${current === i ? 'slide-card-active' : ''}`}
               >
                 <img 
                   src={project.img} 
@@ -707,26 +700,12 @@ const GraphicDesign = () => {
                 </div>
               </div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </div>
 
-      {/* CONTROLS */}
+      {/* CONTROLS (only dots and progress now) */}
       <div className="slider-controls">
-        <button 
-          className="ctrl-btn" 
-          onClick={() => goTo(current === 0 ? total - 1 : current - 1, -1)} 
-          aria-label="Previous"
-        >
-          <ChevronRight className="w-6 h-6 rotate-180" />
-        </button>
-        <button 
-          className="ctrl-btn" 
-          onClick={() => goTo(current === total - 1 ? 0 : current + 1, 1)} 
-          aria-label="Next"
-        >
-          <ChevronRight className="w-6 h-6" />
-        </button>
         <div className="progress-bar-wrap">
           <div 
             className="progress-bar-fill" 

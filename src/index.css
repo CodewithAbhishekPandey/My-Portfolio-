@@ -90,13 +90,19 @@
   user-select: none; pointer-events: none;
 }
 
-.slider-outer { position: relative; z-index: 2; }
+.slider-outer { 
+  position: relative; 
+  z-index: 2; 
+  display: flex;
+  align-items: center;
+}
 
 .slider-track-wrapper {
   overflow: hidden;
   padding: 30px 80px 40px;
   cursor: grab;
   position: relative;
+  flex: 1;
 }
 .slider-track-wrapper:active { cursor: grabbing; }
 
@@ -271,22 +277,47 @@
 }
 
 .ctrl-btn {
-  width:52px; height:52px;
-  border:1px solid #8B0000; background:transparent;
-  color:var(--color-warm-ivory); cursor:pointer;
-  display:flex; align-items:center; justify-content:center;
-  font-size:20px; position:relative; overflow:hidden;
-  transition: box-shadow 0.25s;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 1px solid rgba(139, 0, 0, 0.4);
+  background: rgba(10, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  color: var(--color-warm-ivory);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  opacity: 0.6;
 }
 .ctrl-btn::before {
   content:''; position:absolute; inset:0;
-  background:#8B0000; transform:scaleX(0);
-  transform-origin:left; transition:transform 0.25s ease;
+  background: #8B0000; transform:scale(0);
+  border-radius: 50%;
+  transition: transform 0.3s ease;
 }
-.ctrl-btn:hover::before { transform:scaleX(1); }
+.ctrl-btn:hover::before { transform:scale(1); }
 .ctrl-btn svg { position:relative; z-index:1; }
-.ctrl-btn:hover { box-shadow:0 0 24px #8B0000; }
-.ctrl-btn:disabled { opacity:0.35; cursor:default; }
+.ctrl-btn:hover { 
+  box-shadow: 0 0 24px rgba(139, 0, 0, 0.5); 
+  opacity: 1;
+  border-color: #8B0000;
+  color: #fff;
+}
+.ctrl-btn:disabled { opacity: 0.15; cursor: default; }
+
+.side-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 30;
+}
+.btn-left { left: 20px; }
+.btn-right { right: 20px; }
 
 .progress-bar-wrap {
   flex:1; height:3px; background:rgba(139,0,0,0.2); border-radius:2px; overflow:hidden;
