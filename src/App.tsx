@@ -487,50 +487,43 @@ const GraphicDesign = () => {
   const trackRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const ambientGlowRef = useRef<HTMLDivElement>(null);
-  const GAP = 28;
+  const currentGap = windowWidth < 768 ? 16 : 28;
 
   const graphicProjects = [
     {
       title: "Lunar Eclipse",
       category: "Digital Art",
       desc: "Experimental typography and abstract visual metaphors.",
-      img: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1200&auto=format&fit=crop",
+      img: "/1a.png",
       tag: "Experimental"
     },
     {
       title: "Crimson Velvet",
       category: "Editorial Design",
       desc: "High-fashion magazine layout focused on brutalist elegance.",
-      img: "https://images.unsplash.com/photo-1541311545465-c3359d9921cb?q=80&w=1200&auto=format&fit=crop",
+      img: "/2a.png",
       tag: "Editorial"
     },
     {
       title: "Archetype Branding",
       category: "Identity Systems",
       desc: "Minimalist geometric framework for a tech brand.",
-      img: "https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=1200&auto=format&fit=crop",
+      img: "/3a.png",
       tag: "Branding"
     },
     {
       title: "Obscura Print",
       category: "Print Design",
       desc: "Limited edition screen-printed posters for film festival.",
-      img: "https://images.unsplash.com/photo-1558655146-d09347e92766?q=80&w=1200&auto=format&fit=crop",
+      img: "/4a.png",
       tag: "Poster"
     },
     {
        title: "Midnight Identity",
        category: "Branding",
        desc: "High-contrast visual language for premium accessories.",
-       img: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=1200&auto=format&fit=crop",
+       img: "/5a.png",
        tag: "Identity"
-    },
-    {
-       title: "Cyberpunk Layout",
-       category: "Digital Art",
-       desc: "Next-gen user interface layouts for futuristic platforms.",
-       img: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=1200&auto=format&fit=crop",
-       tag: "UI/UX"
     }
   ];
 
@@ -546,7 +539,7 @@ const GraphicDesign = () => {
   const updateGlow = (idx: number) => {
     if (!ambientGlowRef.current) return;
     const cw = getCardWidth();
-    const cardLeft = (cw + GAP) * idx;
+    const cardLeft = (cw + currentGap) * idx;
     const glowX = cardLeft + cw / 2 + 80;
     const glowY = 220;
     ambientGlowRef.current.style.left = `${glowX}px`;
@@ -677,7 +670,7 @@ const GraphicDesign = () => {
             ref={trackRef} 
             className="slider-track" 
             id="sliderTrack"
-            animate={{ x: -(current * (getCardWidth() + GAP)) }}
+            animate={{ x: -(current * (getCardWidth() + currentGap)) }}
             transition={{ type: "spring", stiffness: 100, damping: 20, mass: 1 }}
           >
             {graphicProjects.map((project, i) => (
