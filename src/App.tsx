@@ -104,13 +104,21 @@ const Navbar = () => {
         </div>
         
         <div className="hidden md:flex items-center space-x-10 text-[11px] font-bold tracking-widest uppercase">
-          {['Home', 'About', 'Skills', 'Projects', 'Testimonials', 'Contact'].map((item) => (
+          {[
+            { name: 'Home', id: 'home' },
+            { name: 'About', id: 'about' },
+            { name: 'Skills', id: 'skills' },
+            { name: 'Development', id: 'projects' },
+            { name: 'Design', id: 'graphic-design' },
+            { name: 'Testimonials', id: 'testimonials' },
+            { name: 'Contact', id: 'contact' }
+          ].map((item) => (
             <a 
-              key={item} 
-              href={`#${item.toLowerCase()}`}
+              key={item.name} 
+              href={`#${item.id}`}
               className="hover:text-wine-red transition-colors duration-300"
             >
-              {item}
+              {item.name}
             </a>
           ))}
         </div>
@@ -467,6 +475,289 @@ const Projects = () => {
   );
 };
 
+const GraphicDesign = () => {
+  const [current, setCurrent] = useState(0);
+  const [busy, setBusy] = useState(false);
+  const [isWiping, setIsWiping] = useState(false);
+  const [exitDir, setExitDir] = useState<string | null>(null);
+  const [enterDir, setEnterDir] = useState<string | null>(null);
+  
+  const trackRef = useRef<HTMLDivElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const ambientGlowRef = useRef<HTMLDivElement>(null);
+  const GAP = 28;
+
+  const graphicProjects = [
+    {
+      title: "Lunar Eclipse",
+      category: "Digital Art",
+      desc: "Experimental typography and abstract visual metaphors.",
+      img: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1200&auto=format&fit=crop",
+      tag: "Experimental"
+    },
+    {
+      title: "Crimson Velvet",
+      category: "Editorial Design",
+      desc: "High-fashion magazine layout focused on brutalist elegance.",
+      img: "https://images.unsplash.com/photo-1541311545465-c3359d9921cb?q=80&w=1200&auto=format&fit=crop",
+      tag: "Editorial"
+    },
+    {
+      title: "Archetype Branding",
+      category: "Identity Systems",
+      desc: "Minimalist geometric framework for a tech brand.",
+      img: "https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=1200&auto=format&fit=crop",
+      tag: "Branding"
+    },
+    {
+      title: "Obscura Print",
+      category: "Print Design",
+      desc: "Limited edition screen-printed posters for film festival.",
+      img: "https://images.unsplash.com/photo-1558655146-d09347e92766?q=80&w=1200&auto=format&fit=crop",
+      tag: "Poster"
+    },
+    {
+       title: "Midnight Identity",
+       category: "Branding",
+       desc: "High-contrast visual language for premium accessories.",
+       img: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=1200&auto=format&fit=crop",
+       tag: "Identity"
+    },
+    {
+       title: "Cyberpunk Layout",
+       category: "Digital Art",
+       desc: "Next-gen user interface layouts for futuristic platforms.",
+       img: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=1200&auto=format&fit=crop",
+       tag: "UI/UX"
+    }
+  ];
+
+  const total = graphicProjects.length;
+
+  const getCardWidth = () => {
+    if (!trackRef.current) return 0;
+    const cards = trackRef.current.querySelectorAll('.slide-card');
+    if (cards.length === 0) return 0;
+    return cards[0].getBoundingClientRect().width;
+  };
+
+  const updateGlow = (idx: number) => {
+    if (!ambientGlowRef.current) return;
+    const cw = getCardWidth();
+    const cardLeft = (cw + GAP) * idx;
+    const glowX = cardLeft + cw / 2 + 80;
+    const glowY = 220;
+    ambientGlowRef.current.style.left = `${glowX}px`;
+    ambientGlowRef.current.style.top = `${glowY}px`;
+  };
+
+  const setTrackX = (x: number) => {
+    if (trackRef.current) {
+      trackRef.current.style.transform = `translateX(${x}px)`;
+    }
+  };
+
+  const animateTrack = (from: number, to: number, dur: number) => {
+    const start = performance.now();
+    const step = (now: number) => {
+      const t = Math.min((now - start) / dur, 1);
+      const ease = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+      setTrackX(from + (to - from) * ease);
+      if (t < 1) requestAnimationFrame(step);
+      else setTrackX(to);
+    };
+    requestAnimationFrame(step);
+  };
+
+  const goTo = (idx: number, dir?: number) => {
+    if (busy || idx === current) return;
+    setBusy(true);
+
+    const direction = dir !== undefined ? dir : (idx > current ? 1 : -1);
+    const prev = current;
+    const nextIdx = ((idx % total) + total) % total;
+
+    // Trigger Wiping Flash
+    setIsWiping(false);
+    setTimeout(() => setIsWiping(true), 10);
+
+    // Trigger card exit animations
+    setExitDir(direction > 0 ? 'exit-left' : 'exit-right');
+    setEnterDir(direction > 0 ? 'enter-from-right' : 'enter-from-left');
+
+    const cw = getCardWidth();
+    const fromX = -(prev * (cw + GAP));
+    const toX = -(nextIdx * (cw + GAP));
+    animateTrack(fromX, toX, 480);
+
+    setTimeout(() => {
+      setCurrent(nextIdx);
+      setExitDir(null);
+      setEnterDir(null);
+      updateGlow(nextIdx);
+      setBusy(false);
+      setIsWiping(false);
+    }, 500);
+  };
+
+  useEffect(() => {
+    updateGlow(current);
+    const handleResize = () => {
+      setTrackX(-(current * (getCardWidth() + GAP)));
+      updateGlow(current);
+    };
+    window.addEventListener('resize', handleResize);
+
+    const timer = setInterval(() => {
+      if (!busy) goTo(current === total - 1 ? 0 : current + 1, 1);
+    }, 4500);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      clearInterval(timer);
+    };
+  }, [current, busy]);
+
+  // Handle keys
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft') goTo(current - 1, -1);
+      if (e.key === 'ArrowRight') goTo(current + 1, 1);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [current, busy]);
+
+  return (
+    <section className="graphic-section" id="graphic-design">
+      {/* ambient glow */}
+      <div ref={ambientGlowRef} className="ambient-glow-gd" id="ambientGlow"></div>
+
+      {/* eyebrow */}
+      <div className="section-eyebrow-gd">
+        <div className="eyebrow-line-gd"></div>
+        <span>Creative Works</span>
+      </div>
+
+      {/* heading */}
+      <div className="graphic-heading-gd">
+        <div className="deco-x">✕</div>
+        <h2>GRAPHIC<br /><em>DESIGN</em></h2>
+        <p>Visual identities, posters & digital art crafted with intention and edge.</p>
+      </div>
+
+      {/* SLIDER */}
+      <div className="slider-outer">
+        {/* wipe flash overlay */}
+        <div className={`wipe-flash ${isWiping ? 'wipe-flash-playing' : ''}`} id="wipeFlash"></div>
+
+        <div 
+          ref={wrapperRef} 
+          className="slider-track-wrapper" 
+          id="trackWrapper"
+          onMouseDown={(e) => {
+            const startX = e.clientX;
+            const onMouseUp = (upEvent: MouseEvent) => {
+              const diff = startX - upEvent.clientX;
+              if (Math.abs(diff) > 55) goTo(diff > 0 ? current + 1 : current - 1, diff > 0 ? 1 : -1);
+              window.removeEventListener('mouseup', onMouseUp);
+            };
+            window.addEventListener('mouseup', onMouseUp);
+          }}
+          onTouchStart={(e) => {
+            const startX = e.touches[0].clientX;
+            const onTouchEnd = (endEvent: TouchEvent) => {
+              const diff = startX - endEvent.changedTouches[0].clientX;
+              if (Math.abs(diff) > 40) goTo(diff > 0 ? current + 1 : current - 1, diff > 0 ? 1 : -1);
+              window.removeEventListener('touchend', onTouchEnd);
+            };
+            window.addEventListener('touchend', onTouchEnd);
+          }}
+        >
+          <div ref={trackRef} className="slider-track" id="sliderTrack">
+            {graphicProjects.map((project, i) => (
+              <div 
+                key={i} 
+                className={`slide-card c${i + 1} ${current === i ? 'slide-card-active' : ''} ${
+                  current === i && enterDir ? enterDir : ''
+                } ${
+                  exitDir && ( (i === (current - 1 + total) % total && exitDir) || (i === (current + 1) % total && exitDir) ) ? '' : ''
+                  /* The CSS animation logic for exit/enter is a bit tricky with React's state. 
+                     I'll just let the state update handle position and use simpler approach.
+                  */
+                }`}
+                style={{ 
+                  animationName: current === i && enterDir ? (enterDir === 'enter-from-right' ? 'enterFromRight' : 'enterFromLeft') : undefined,
+                  animationDuration: '0.55s',
+                  animationFillMode: 'forwards'
+                }}
+              >
+                <img 
+                  src={project.img} 
+                  className="card-img" 
+                  alt={project.title} 
+                  referrerPolicy="no-referrer"
+                />
+                <span className="card-num">0{i + 1}</span>
+                <div className="card-overlay">
+                  <span className="overlay-tag">{project.category}</span>
+                  <div className="overlay-title">{project.title}</div>
+                  <div className="overlay-desc">{project.desc}</div>
+                  <div className="overlay-arrow">→</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* CONTROLS */}
+      <div className="slider-controls">
+        <button 
+          className="ctrl-btn" 
+          onClick={() => goTo(current === 0 ? total - 1 : current - 1, -1)} 
+          aria-label="Previous"
+        >
+          <ChevronRight className="w-6 h-6 rotate-180" />
+        </button>
+        <button 
+          className="ctrl-btn" 
+          onClick={() => goTo(current === total - 1 ? 0 : current + 1, 1)} 
+          aria-label="Next"
+        >
+          <ChevronRight className="w-6 h-6" />
+        </button>
+        <div className="progress-bar-wrap">
+          <div 
+            className="progress-bar-fill" 
+            style={{ width: `${((current + 1) / total) * 100}%` }}
+          ></div>
+        </div>
+        <div className="slider-dots">
+          {graphicProjects.map((_, i) => (
+            <div 
+              key={i} 
+              className={`dot ${current === i ? 'dot-active' : ''}`}
+              onClick={() => goTo(i)}
+            ></div>
+          ))}
+        </div>
+        <div className="slide-counter"><span>{current + 1}</span> / {total}</div>
+      </div>
+
+      {/* BOTTOM STRIP */}
+      <div className="section-strip">
+        <span className="strip-label">Available for freelance & collaborations</span>
+        <a href="#contact" className="strip-cta">
+          <span>Hire Me for Design</span>
+          <span>→</span>
+        </a>
+      </div>
+    </section>
+  );
+};
+
+
 const Stats = () => {
   return (
     <section className="py-20 border-y border-white/5 bg-[#080808]">
@@ -761,6 +1052,7 @@ export default function App() {
         <About />
         <Skills />
         <Projects />
+        <GraphicDesign />
         <Stats />
         <Testimonials />
         <Contact />
