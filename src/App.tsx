@@ -57,6 +57,8 @@ const ProjectCard = ({ project, index }: { project: any, index: number, key?: Re
             alt={project.title} 
             className="w-full h-full object-cover brightness-[0.7] group-hover:brightness-[0.9] transition-all duration-1000"
             referrerPolicy="no-referrer"
+            loading="lazy"
+            decoding="async"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
       </div>
@@ -208,6 +210,8 @@ const Hero = () => {
               alt="Cinematic Portrait"
               className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
               referrerPolicy="no-referrer"
+              loading="eager"
+              decoding="sync"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-matte-black via-transparent to-transparent opacity-60" />
             
@@ -241,6 +245,8 @@ const About = () => {
               alt="Profile"
               className="w-full h-full object-cover hover:grayscale-0 transition-all duration-700"
               referrerPolicy="no-referrer"
+              loading="lazy"
+              decoding="async"
             />
           </div>
           <div className="absolute -bottom-10 -right-10 w-48 h-48 border border-wine-red/30 rounded-2xl -z-10" />
@@ -694,6 +700,8 @@ const GraphicDesign = () => {
                   className="card-img" 
                   alt={project.title} 
                   referrerPolicy="no-referrer"
+                  loading="lazy"
+                  decoding="async"
                 />
                 <span className="card-num">0{i + 1}</span>
                 <div className="card-overlay">
